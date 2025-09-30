@@ -48,6 +48,13 @@ class StudyShareApp {
         this.elements.uploadBtn.addEventListener('click', () => this.openUploadModal());
         this.elements.fileInput.addEventListener('change', (e) => this.handleFileSelect(e.target.files));
         
+        // Custom thumbnail functionality
+        document.getElementById('thumbnailUploadArea').addEventListener('click', () => {
+            document.getElementById('customThumbnail').click();
+        });
+        document.getElementById('customThumbnail').addEventListener('change', (e) => this.handleThumbnailSelect(e.target.files));
+        document.getElementById('removeThumbnail').addEventListener('click', () => this.removeCustomThumbnail());
+        
         // Upload area drag and drop
         this.elements.uploadArea.addEventListener('click', () => this.elements.fileInput.click());
         this.elements.uploadArea.addEventListener('dragover', this.handleDragOver.bind(this));

@@ -507,6 +507,70 @@ body {
     border-radius: 4px;
 }
 
+/* Thumbnail Upload */
+.thumbnail-upload-area {
+    border: 2px dashed #d1d5db;
+    border-radius: 8px;
+    padding: 24px 16px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background: #f8fafc;
+}
+
+.thumbnail-upload-area:hover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.02);
+}
+
+.thumbnail-upload-area svg {
+    color: #9ca3af;
+    margin-bottom: 8px;
+}
+
+.thumbnail-upload-area span {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.thumbnail-preview {
+    position: relative;
+    display: inline-block;
+    margin-top: 12px;
+}
+
+.thumbnail-preview img {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+}
+
+.remove-thumbnail {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.remove-thumbnail:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
 .form-actions {
     display: flex;
     gap: 12px;
