@@ -31,6 +31,7 @@ class StudyShareApp {
         
         this.activeTags = new Set();
         this.currentFiles = [];
+        this.customThumbnailDataUrl = null;
         
         // Add sample notes if none exist
         if (this.notes.length === 0) {
@@ -55,6 +56,7 @@ class StudyShareApp {
         document.getElementById('customThumbnail').addEventListener('change', (e) => this.handleThumbnailSelect(e.target.files));
         document.getElementById('removeThumbnail').addEventListener('click', () => this.removeCustomThumbnail());
         
+        // Upload area drag and drop
         // Upload area drag and drop
         this.elements.uploadArea.addEventListener('click', () => this.elements.fileInput.click());
         this.elements.uploadArea.addEventListener('dragover', this.handleDragOver.bind(this));
@@ -96,6 +98,35 @@ class StudyShareApp {
     handleDragLeave(e) {
         e.preventDefault();
         this.elements.uploadArea.classList.remove('dragover');
+    }
+    
+    handleThumbnailSelect(files) {
+        if (!files || files.length === 0) return;
+        
+        const file = files[0];
+        if (!file.type.startsWith('image/')) {
+            alert('Please select an image file for the thumbnail');
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            this.customThumbnailDataUrl = e.target.result;
+            this.showThumbnailPreview(this.customThumbnailDataUrl);
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    removeCustomThumbnail() {
+        this.customThumbnailDataUrl = null;
+        document.getElementById('thumbnailPreview').style.display = 'none';
+        document.getElementById('customThumbnail').value = '';
+    }
+    
+    showThumbnailPreview(imageData) {
+        const preview = document.getElementById('thumbnailPreview');
+        preview.innerHTML = `<img src="${imageData}" alt="Custom thumbnail preview">`;
+        preview.style.display = 'block';
     }
     
     handleDrop(e) {
@@ -192,6 +223,9 @@ class StudyShareApp {
         document.getElementById('noteClass').value = '';
         document.getElementById('noteTags').value = '';
         
+        // Reset custom thumbnail
+        this.removeCustomThumbnail();
+        
         this.closeModal('uploadModal');
     }
     
@@ -209,13 +243,20 @@ class StudyShareApp {
             const file = this.currentFiles[0];
             let thumbnail, fullImage;
             
-            if (file.type === 'application/pdf') {
+            // Use custom thumbnail if provided, otherwise extract from file
+            if (this.customThumbnailDataUrl) {
+                thumbnail = this.customThumbnailDataUrl;
+            } else if (file.type === 'application/pdf') {
                 thumbnail = await this.extractPdfFirstPage(file);
-                fullImage = thumbnail; // For demo, using same image
             } else {
                 const dataUrl = await this.readFileAsDataURL(file);
                 thumbnail = dataUrl;
-                fullImage = dataUrl;
+            }
+            
+            if (file.type === 'application/pdf') {
+                fullImage = await this.extractPdfFirstPage(file);
+            } else {
+                fullImage = await this.readFileAsDataURL(file);
             }
             
             const note = {
